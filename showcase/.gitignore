@@ -1,4 +1,5 @@
 !/web/assets/*.glb
 !/web/assets/showcase/app.mp4
+!/web/assets/showcase/camera-path.mp4
 !/source/scan/scandesigner.obj
 !/source/scan/scandesigner.glb

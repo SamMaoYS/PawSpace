@@ -111,3 +111,10 @@ main { padding-top: 0; }
   .analysis-item h4 { font-size: 15px; }
   .measure-reason { font-size: 13px; }
 }
+
+.camera-path { display: grid; grid-template-columns: minmax(0, .84fr) minmax(0, 1.16fr); align-items: center; gap: clamp(28px, 6vw, 88px); margin-top: 0; padding-bottom: clamp(28px, 4vw, 60px); }
+.camera-path .section-intro { margin-bottom: 0; }
+.camera-path video { display: block; width: 100%; height: auto; border-radius: 12px; background: #eef0ef; }
+@media (max-width: 780px) {
+  .camera-path { grid-template-columns: 1fr; gap: 16px; }
+}

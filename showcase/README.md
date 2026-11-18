@@ -25,6 +25,7 @@ macOS 也可双击 [打开房间漫游.command](web/打开房间漫游.command)�
 | [design.glb](web/assets/design.glb) | 与扫描对齐的虚拟副本，可用相同的相机视角对比 |
 | [pet-layout.glb](web/assets/pet-layout.glb) | 带猫窝和建议占地虚线的三维方案 |
 | [views.json](web/assets/views.json) | 房间全景及五个家具、门口视角的相机参数与双语标注 |
+| [相机轨迹视频](web/assets/showcase/camera-path.mp4) | 位于 App 介绍与房间漫游之间，用绿色标记展示扫描时相机在重建房间内的位置和朝向 |
 | [展示素材](web/assets/showcase/) | 网页播放的加速版 App 视频与封面、Blender 渲染图和带尺寸的分析图 |
 | [纹理扫描源文件](source/scan/) | 完整的扫描 GLB，以及 texrecon 输出的 OBJ、MTL 和七张 PNG 纹理图。导入 OBJ 时将这些文件放在同一目录。 |
 | [ScanDesigner-room.blend](source/replica/ScanDesigner-room.blend) | 可编辑的虚拟副本源场景，包含按扫描搭建的家具、墙体、相机和灯光，使用 Blender 5.0.1 制作。猫窝方案可另行导入上面的 pet-layout.glb。 |
