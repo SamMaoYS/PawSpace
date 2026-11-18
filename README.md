@@ -8,6 +8,19 @@
 | [reconstruction](reconstruction/) | Python + Open3D CPU TSDF | 米制彩色 `mesh.ply`、`points.ply`、`report.json` |
 | [instant-meshes](instant-meshes/) | Instant Meshes 源码及命令行封装 | 保留 ARKit 世界坐标的轻量三角网格 |
 | [texturing](texturing/) | 远程 Linux 安装、相机转换与 texrecon 源码 | 带 UV 的 OBJ、MTL 与纹理图片 |
+| [showcase](showcase/) | 房间漫游、虚拟副本与猫窝布置演示 | 交互网页、纹理网格及可编辑的 Blender 场景 |
+
+## 在本机打开演示网页
+
+安装 Python 3 后，克隆仓库并启动本地服务。
+
+```sh
+git clone https://github.com/SamMaoYS/ScanDesigner.git
+cd ScanDesigner
+python3 -m http.server 8731 --bind 127.0.0.1 --directory showcase/web
+```
+
+在支持 WebGL 2 的浏览器打开 [本机演示网页](http://127.0.0.1:8731/)。页面默认使用英文，右上角可切换中文。在终端按 Ctrl+C 停止服务。网页所需的模型、视频、渲染图和查看器均已随仓库提供。模型源文件位置、macOS 快捷启动方式和 Windows 命令见 [showcase 使用说明](showcase/README.md)。
 
 ## 从一次扫描开始
 
