@@ -1,0 +1,3 @@
+[submodule "instant-meshes"]
+	path = instant-meshes/source
+	url = https://github.com/3dlg-hcvc/instant-meshes.git
