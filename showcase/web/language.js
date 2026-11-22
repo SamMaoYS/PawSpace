@@ -8,9 +8,10 @@ function toEnglish(value){
   const t=s.trim();
   if(englishCopy[t])return s.replace(t,englishCopy[t]);
   let m;
-  if((m=t.match(/^(\d{2}[a-e]?)　(.+?)(（选填）)?$/)))return m[1]+'　'+toEnglish(m[2])+(m[3]?' (optional)':'');
+  if((m=t.match(/^((?:P)?\d{2}[a-e]?)　(.+?)(（选填）)?$/)))return m[1]+'　'+toEnglish(m[2])+(m[3]?' (optional)':'');
   if((m=t.match(/^([✓]|\d+ ·) (.+)$/)))return m[1]+' '+toEnglish(m[2]);
   if((m=t.match(/^(\d+) 户$/)))return m[1]+' '+(+m[1]===1?'household':'households');
+  if((m=t.match(/^(\d+) 份$/)))return m[1]+' '+(+m[1]===1?'response':'responses');
   if((m=t.match(/^(\d+) 份 · (\d+%)$/)))return m[1]+' · '+m[2];
   if((m=t.match(/^本图分母为 (\d+) 份。点击横条查看选择该答案的家庭。$/)))return 'Based on '+m[1]+' responses. Select a bar to read the corresponding households.';
   if((m=t.match(/^显示 (\d+) 份$/)))return 'Showing '+m[1]+' responses';

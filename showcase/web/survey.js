@@ -1,8 +1,9 @@
 const v2Draft=readLocal('draft-v2',null);
 const v3Draft=readLocal('draft-v3',null);
-const lastDraft=v3Draft || v2Draft || readLocal('draft',{}) || {};
-const lastDraftSchema=v3Draft?surveyVersions['pawspace-response-v3'].questions:v2Draft?surveyVersions['pawspace-response-v2'].questions:previousQuestions;
-const draft=readLocal('draft-v4',null) || {
+const v4Draft=readLocal('draft-v4',null);
+const lastDraft=v4Draft || v3Draft || v2Draft || readLocal('draft',{}) || {};
+const lastDraftSchema=v4Draft?surveyVersions['pawspace-response-v4'].questions:v3Draft?surveyVersions['pawspace-response-v3'].questions:v2Draft?surveyVersions['pawspace-response-v2'].questions:previousQuestions;
+const draft=readLocal('draft-v5',null) || {
   chapter:lastDraft.chapter,
   answers:Object.fromEntries(questions.filter(q=>q.options.includes(lastDraft.answers?.[q.id]) &&
     lastDraftSchema.some(old=>old.id===q.id && old.title===q.title)
@@ -19,7 +20,7 @@ function valid(q,a) {
   return typeof v==='string'&&(q.options?q.options.includes(v):v.trim().length>0&&v.length<=1800);
 }
 function saveDraft(){
-  try{saveLocal('draft-v4',{chapter,answers,id:submissionId});}
+  try{saveLocal('draft-v5',{chapter,answers,id:submissionId});}
   catch{byId('form-status').textContent='浏览器未能保存草稿。可以继续填写，完成后下载答卷。';}
 }
 function jump(i,scroll=true){
@@ -34,17 +35,17 @@ function updateAnswer(q,v){
 }
 function renderSurvey(){
   const page=byId('survey-page'),steps=byId('steps');page.replaceChildren();steps.replaceChildren();
-  const title=el('h3',chapters[chapter][0]);title.id='chapter-title';title.tabIndex=-1;
-  page.append(title,el('p',chapters[chapter][1],'quiet'));
+  const futureChapters=["您的居住情况与养宠意愿","未来宠物区域","养宠的空间顾虑","选购用品前的准备","AI 规划需求"];
+  const title=el('h3',noPet()?futureChapters[chapter]:chapters[chapter][0]);title.id='chapter-title';title.tabIndex=-1;
+  page.append(title,el('p',noPet()?'请按您的真实想法回答，即使暂时没有养宠计划也可以。':chapters[chapter][1],'quiet'));
   chapters.forEach(([name],i)=>{
     const done=sections[i].filter(q=>applies(q,answers)).every(q=>valid(q,answers));
-    const step=action((done?'✓ ':String(i+1)+' · ')+name,()=>jump(i),'step');
+    const step=action((done?'✓ ':String(i+1)+' · ')+(noPet()?futureChapters[i]:name),()=>jump(i),'step');
     if(i===chapter)step.setAttribute('aria-current','step');
-    step.disabled=noPet()&&i>0;
     steps.append(step);
   });
   for(const q of sections[chapter]){
-    if(!applies(q,answers)||(noPet()&&!['household','petCount'].includes(q.id)))continue;
+    if(!applies(q,answers))continue;
     const f=el('fieldset'),legend=el('legend',questionNumbers.get(q.id)+'　'+q.title+(q.optional?'（选填）':''));
     f.id='field-'+q.id;f.append(legend);
     if(q.hint){const hint=el('p',q.hint);hint.id='hint-'+q.id;f.append(hint);}
@@ -59,9 +60,9 @@ function renderSurvey(){
     page.append(f);
   }
   byId('prev').hidden=chapter===0;
-  byId('next').hidden=noPet();
+  byId('next').hidden=false;
   byId('next').textContent=chapter===4?'提交这份答卷':'下一组';
-  byId('form-status').textContent=noPet()?'本次问卷面向目前与宠物同住的人。感谢您的时间。':'';
+  byId('form-status').textContent='';
 }
 byId('prev').onclick=()=>jump(chapter-1);
 function reportMissing(group,q){
@@ -71,7 +72,7 @@ function reportMissing(group,q){
 function recordFrom(data){
   if(!Object.hasOwn(surveyVersions,data?.format)||!/^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$/i.test(data.id)||!data.answers||typeof data.answers!=='object'||Array.isArray(data.answers))throw Error('invalid');
   const schema=surveyVersions[data.format].questions;
-  if(data.format!=='pawspace-response-v1'&&data.answers.petCount==='目前没有')throw Error('petCount');
+  if(data.format!==currentFormat&&data.format!=='pawspace-response-v1'&&data.answers.petCount==='目前没有')throw Error('petCount');
   const result={};
   for(const q of schema)if(applies(q,data.answers)){
     if(!valid(q,data.answers))throw Error(q.id);
@@ -91,7 +92,6 @@ async function mergeRecords(rows){
 }
 byId('questionnaire').onsubmit=async event=>{
   event.preventDefault();
-  if(noPet())return;
   const current=sections[chapter].find(q=>applies(q,answers)&&!valid(q,answers));
   if(current){reportMissing(chapter,current);return;}
   if(chapter<4){jump(chapter+1);return;}
@@ -105,7 +105,7 @@ byId('questionnaire').onsubmit=async event=>{
     await mergeRecords([record]);receipt=record;
     byId('questionnaire').hidden=true;byId('receipt').hidden=false;
     byId('steps').querySelectorAll('button').forEach(b=>b.disabled=true);
-    try{saveLocal('draft-v4',{});}catch{}
+    try{saveLocal('draft-v5',{});}catch{}
     byId('form-status').textContent='';renderChart();
   }catch{
     download('PawSpace-'+record.id+'.json',JSON.stringify(record,null,2),'application/json');
@@ -139,7 +139,11 @@ sections.forEach((section,i)=>{
   for(const q of section){
     const line=el('div',undefined,'instrument-question');
     line.append(el('h4',questionNumbers.get(q.id)+'　'+q.title));
-    if(q.when)line.append(el('p',q.when===branches.children?"仅询问与未满 18 岁孩子同住的家庭。":q.when===branches.detour?'仅询问过去 7 天有绕行经历的人。':'仅询问记得最近一次挪动用品的人。','quiet'));
+    if(q.when) {
+      const condition=q.originalWhen||q.when;
+      const label=condition===prospective?'仅询问目前无宠物的家庭。':condition===branches.children?'仅询问与未满 18 岁孩子同住的家庭。':condition===branches.detour?'仅询问过去 7 天有绕行经历的人。':condition===branches.move?'仅询问记得最近一次挪动用品的人。':'仅询问目前养宠的家庭。';
+      line.append(el('p',(q.ownerOnly&&q.originalWhen?'仅询问目前养宠的家庭。 ':'')+label,'quiet'));
+    }
     if(q.hint)line.append(el('p',q.hint,'quiet'));
     const options=el('div',undefined,'reading-options');
     q.options.forEach(v=>options.append(el('span',v)));line.append(options);

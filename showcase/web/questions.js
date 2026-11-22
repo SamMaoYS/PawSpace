@@ -27,7 +27,7 @@ const branches = {
   move: a => Boolean(a.moved) && !['没有挪动过', '记不清'].includes(a.moved)
 };
 
-const sections = [
+const v4Sections = [
   [
     {id: "household", title: "目前有哪些人和您同住？", options: ["独居", "两人伴侣", "与未满 18 岁的孩子同住", "与室友或其他家人同住", "其他"], hint: "有未满 18 岁的孩子同住时，请选包含孩子的一项。"},
     {"id": "adults", "number": "01a", "title": "家里通常住着几位成年人？请算上您自己。", "options": ["1 位", "2 位", "3 位", "4 位及以上", "不方便回答"], when: branches.children},
@@ -74,6 +74,24 @@ const sections = [
     {id: "privacy", title: "考虑扫描自己的房间时，你最在意什么？", options: ["影像能否只存在本机", "能否遮住私人物品", "设备是否支持", "扫描需要多久", "尺寸误差", "没有明显顾虑"]},
   ],
 ];
+const hasPet = a => Boolean(a.petCount) && a.petCount !== "目前没有";
+const prospective = a => a.petCount === "目前没有";
+const prospectiveQuestions = [
+  [{id:"futureIntent", number:"P01", title:"未来一年，您有养宠物的打算吗？", options:["已经在准备","有兴趣，还没决定","暂时没有计划","不打算养宠物"]}],
+  [{id:"futureSpecies", number:"P02", title:"如果以后养宠物，您最可能考虑哪一种？", options:["猫","狗","兔、仓鼠等小动物","其他宠物","还没想好","不考虑养宠物"]},
+   {id:"futureZone", number:"P03", title:"如果准备养宠物，您最先想规划家里的哪个区域？", options:["休息区","进食饮水区","如厕区","活动区","储粮区","暂时没有想法"]}],
+  [{id:"futureConcern", number:"P04", title:"考虑养宠物时，您对目前住处最主要的顾虑是什么？", options:["空间不足，用品放不下","担心用品挡门或过道","租约或房东限制","清洁与气味","工作学习忙，照料不方便","同住者或孩子的需要","没有明显顾虑","还没考虑过"]}],
+  [{id:"futureSize", number:"P05", title:"如果需要购买第一批宠物用品，您最希望提前确认什么？", options:["适合宠物和房间的尺寸范围","家里哪些地方可以摆放","摆好以后能否顺畅开门通行","需要准备哪些用品","暂时不需要这些信息"]}],
+  [{id:"futureAI", number:"P06", title:"如果将来规划宠物区域，您最希望 AI 帮您做什么？", options:["根据房间推荐用品尺寸","根据要求自动生成布置方案","模拟开门和日常动线","比较两个方案的优缺点","暂时不需要 AI 帮忙"]},
+   {id:"futureMode", number:"P07", title:"您更愿意怎样开始规划？", options:["描述自己的要求，让 AI 推荐","先看常见方案，再调整","先自己选择位置，让系统检查","暂时不想使用"]}]
+];
+const commonQuestions = new Set(["household","adults","childrenCount","youngest","petCount","tenure","device","privacy"]);
+const sections = v4Sections.map((section, i) => [
+  ...section.map(q => commonQuestions.has(q.id) ? q : {
+    ...q, when: a => hasPet(a) && (!q.when || q.when(a)), ownerOnly: true, originalWhen: q.when
+  }),
+  ...prospectiveQuestions[i].map(q => ({...q, when: prospective}))
+]);
 const questions = sections.flat();
 
 const questionNumbers = new Map();

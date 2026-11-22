@@ -50,14 +50,14 @@ const familyFilter=byId('family-filter');
 
 let selectedAnswer='';
 const isCases=()=>byId('source').value==='cases';
-const currentFormat = 'pawspace-response-v4';
+const currentFormat = 'pawspace-response-v5';
 const activeFormat = () => Object.keys(surveyVersions).find(key=>surveyVersions[key].source===byId('source').value) || currentFormat;
 const activeSurvey = () => surveyVersions[activeFormat()];
 const activeQuestions = () => activeSurvey().questions;
 const sourceRecords = () => isCases() ? familyCases : readLocal('responses',[]).filter(r=>r.format===activeFormat());
 function syncSources() {
   const records=readLocal('responses',[]);
-  for(const [format,label] of [['pawspace-response-v1','旧版实收答卷（第一版）'],['pawspace-response-v2','旧版实收答卷（第二版）'],['pawspace-response-v3',"旧版实收答卷（第三版）"]]){
+  for(const [format,label] of [['pawspace-response-v1','旧版实收答卷（第一版）'],['pawspace-response-v2','旧版实收答卷（第二版）'],['pawspace-response-v3',"旧版实收答卷（第三版）"],['pawspace-response-v4','旧版实收答卷（第四版）']]){
     const value=surveyVersions[format].source;
     if(records.some(r=>r.format===format) && !Array.from(byId('source').options).some(o=>o.value===value))
       byId('source').add(new Option(label,value));
@@ -67,7 +67,8 @@ const metricLabels = {
   purchaseFit:'购买时的尺寸经历', measuring:'购买前测量次数', doorIssue:'开门受阻', days:'绕开用品的天数', layoutDifficulty:'自己布置时的困难',
   instruction:'希望如何给出要求', assistance:'希望 AI 完成的任务', keepFixed:'需要保留的位置', priorityRoute:'优先照顾的路线',
   sharedUse:"孩子与宠物最近如何共用空间", childPriority:"育儿家庭的布置重点", childrenCount:"同住孩子人数", youngest:"最小孩子的年龄", adults:"育儿家庭的成人人数",
-  focus:'优先改善的区域', device:'扫描设备可用性', feature:'首选功能', evidence:'最想补充的信息', view:'首选视图'
+  petCount:'同住宠物数量', species:'宠物种类', focus:'优先改善的区域', device:'扫描设备可用性', feature:'首选功能', evidence:'最想补充的信息', view:'首选视图',
+  futureIntent:'未来养宠意愿（无宠家庭）', futureSpecies:'未来考虑的宠物', futureZone:'计划布置的区域', futureConcern:'养宠空间顾虑', futureSize:'首次选购前的信息需求', futureAI:'潜在用户的 AI 需求', futureMode:'潜在用户的规划方式'
 };
 function syncMetrics(schema){
   const select=byId('metric'), old=select.value;
@@ -108,7 +109,7 @@ function renderChart() {
   syncMetrics(schema);
   const records=sourceRecords(), total=records.length;
   byId('total').textContent=total;
-  byId('source-note').textContent=isCases()?'头像与资料地区来自联系人截图，已确认的身份和家庭资料单独列出。13 份答卷用于演示家庭情境分析。':'仅统计本浏览器实际提交或由研究者导入的答卷。';
+  byId('source-note').textContent=isCases()?'13 个家庭案例：8 户养宠、5 户无宠。养宠经历与未来养宠需求分别统计，案例答案用于演示。':'仅统计本浏览器实际提交或由研究者导入的答卷。';
   let from=0; const arcs=[];
   byId('breakdown').replaceChildren();
   familyQuestion.options.forEach((name,i)=>{
@@ -132,7 +133,27 @@ function renderChart() {
     fill.style.width=pct+'%';track.append(fill);row.append(el('span',opt),track,el('span',n+' 份 · '+pct+'%'));byId('chart').append(row);
   });
   byId('chart-note').textContent=eligible.length?'本图分母为 '+eligible.length+' 份。点击横条查看选择该答案的家庭。':"当前范围没有适用这道题的答卷。";
-  renderDesignFindings(group);
+  if(activeFormat()===currentFormat){
+    const futureGroup=group.filter(r=>prospective(r.answers));
+    const futurePanel=byId('future-findings');
+    futurePanel.replaceChildren();
+    futurePanel.hidden=!futureGroup.length;
+    if(futureGroup.length){
+      futurePanel.append(el('h3','潜在养宠用户：空间与 AI 规划需求'));
+      for(const [id,label] of [['futureIntent','未来养宠意愿（无宠家庭）'],['futureConcern','养宠空间顾虑'],['futureAI','潜在用户的 AI 需求']]){
+        const question=schema.find(item=>item.id===id);
+        const answered=futureGroup.filter(r=>question.options.includes(r.answers[id]));
+        const row=el('p');
+        row.append(el('strong',label), ' · ', el('span',answered.length+' 份'), ' — ');
+        question.options.filter(option=>answered.some(r=>r.answers[id]===option)).forEach((option,i)=>{
+          if(i)row.append(' / ');
+          row.append(el('span',option), ' ', el('span',answered.filter(r=>r.answers[id]===option).length+' 份'));
+        });
+        futurePanel.append(row);
+      }
+    }
+  } else byId('future-findings').hidden=true;
+  renderDesignFindings(group.filter(r=>r.answers.petCount!=='目前没有'));
   renderRoster();
 }
 function renderRoster(){
@@ -145,7 +166,7 @@ function renderRoster(){
     if(isCases()){const im=el('img');im.alt='';im.src='assets/avatars/'+r.id+'.png';avatar.replaceChildren(im);}
     if(isCases()){
       const role=r.profileRole||r.job;
-      title.append(el('b',role?code+' · '+role:code),el('small',r.family));
+      title.append(el('b',role?code+' · '+role:code),el('small',r.family),el('small',r.pet));
       if(r.profileRegion)title.append(el('em',r.profileRegion));
     }else{
       title.append(el('b',code+' · '+r.answers.household),el('small',r.answers.species||r.answers.pet),el('em',r.answers.age||''));
@@ -164,8 +185,10 @@ function renderRoster(){
       if(note)d.append(el('blockquote',note));
       d.append(action('导出本份答卷 CSV',()=>exportCSV([r],code),'secondary'));
       activeSurvey().sections.forEach((sec,i)=>{
+        const visible=sec.filter(q=>!q.when||q.when(r.answers));
+        if(!visible.length)return;
         d.append(el('h4',activeSurvey().chapters[i]));const list=el('dl');
-        for(const q of sec){if(q.when&&!q.when(r.answers)) continue;list.append(el('dt',q.title),el('dd',r.answers[q.id]||'未填写（选填）'));}
+        for(const q of visible){list.append(el('dt',q.title),el('dd',r.answers[q.id]||'未填写（选填）'));}
         d.append(list);
       });
     });

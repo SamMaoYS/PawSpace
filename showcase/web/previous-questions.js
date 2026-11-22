@@ -54,11 +54,12 @@ const v2PlanningQuestions = [
   {id: "view", title: "比较自家两个摆放位置时，您最希望先看到哪种视图？", options: ["带尺寸的平面图", "保留家具纹理的实景扫描", "可旋转的简化三维房间", "两个位置的并排照片", "直接拿实物试就够了", "说不准"]},
   {id: "feature", title: "如果只能先做一个功能，你会选哪一个？", options: ["按自家用品尺寸试摆", "对比两个位置", "查看剩余通行空间", "与家人分享方案", "其他功能", "暂时用不上", "说不准"]}
 ];
-const v3Sections = [[{id: "household", title: "谁和你一起使用家里的公共空间？", options: ["独居", "两人伴侣", "育儿家庭，有婴幼儿", "与室友或其他家人同住", "其他"]}, ...sections[0].slice(6)], ...sections.slice(1)];
-const v2Sections = [...v3Sections.slice(0, 3), [{id: "focus", title: "如果只改善一处，你会先动哪里？", options: ["休息区", "进食饮水区", "如厕区", "储粮区", "家里的通道", "暂时维持现状"]}, ...v2PlanningQuestions.slice(0, 4)], [...v2PlanningQuestions.slice(4), ...sections[4].slice(3)]];
+const v3Sections = [[{id: "household", title: "谁和你一起使用家里的公共空间？", options: ["独居", "两人伴侣", "育儿家庭，有婴幼儿", "与室友或其他家人同住", "其他"]}, ...v4Sections[0].slice(6)], ...v4Sections.slice(1)];
+const v2Sections = [...v3Sections.slice(0, 3), [{id: "focus", title: "如果只改善一处，你会先动哪里？", options: ["休息区", "进食饮水区", "如厕区", "储粮区", "家里的通道", "暂时维持现状"]}, ...v2PlanningQuestions.slice(0, 4)], [...v2PlanningQuestions.slice(4), ...v4Sections[4].slice(3)]];
 const surveyVersions = {
   "pawspace-response-v1": {source:"previous", sections:previousSections, chapters:previousChapters, questions:previousQuestions},
   "pawspace-response-v2": {source:"v2", sections:v2Sections, chapters:[...chapters.slice(0,3).map(c=>c[0]), "想改哪里，能改多少", "试摆工具能帮上什么忙"], questions:v2Sections.flat()},
   "pawspace-response-v3": {source:"v3", sections:v3Sections, chapters:chapters.map(c=>c[0]), questions:v3Sections.flat()},
-  "pawspace-response-v4": {source:"live", sections, chapters:chapters.map(c=>c[0]), questions}
+  "pawspace-response-v4": {source:"v4", sections:v4Sections, chapters:chapters.map(c=>c[0]), questions:v4Sections.flat()},
+  "pawspace-response-v5": {source:"live", sections, chapters:chapters.map(c=>c[0]), questions}
 };
