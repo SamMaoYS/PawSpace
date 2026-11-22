@@ -1,0 +1,47 @@
+name: Publish PawSpace to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'showcase/web/**'
+      - '.github/workflows/pawspace-pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: false
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Stage the static report
+        run: |
+          mkdir -p "$RUNNER_TEMP/pawspace"
+          git archive HEAD:showcase/web | tar -x -C "$RUNNER_TEMP/pawspace" --exclude='*.command'
+          test -s "$RUNNER_TEMP/pawspace/index.html"
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: ${{ runner.temp }}/pawspace
+
+  deploy:
+    needs: package
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy PawSpace
+        id: deployment
+        uses: actions/deploy-pages@v4
