@@ -1,6 +1,6 @@
-# Run ScanDesigner
+# Run PawSpace
 
-Open `ScannerApp-Swift.xcodeproj` in a version of Xcode supported by the Mac. Select the **ScanDesigner** scheme and an iPad simulator, then choose **Run**. Use **Preview scanner** to record synthetic frames and browse the resulting files locally.
+Open `ScannerApp-Swift.xcodeproj` in a version of Xcode supported by the Mac. Select the **ScanDesigner** scheme (legacy internal Xcode target name; the installed app is PawSpace) and an iPad simulator, then choose **Run**. Use **Preview scanner** to record synthetic frames and browse the resulting files locally.
 
 For a physical device, choose a LiDAR-equipped iPad Pro or iPhone Pro running iOS or iPadOS 16 or later. Select the device as the run destination. In **Signing & Capabilities**, choose a development team and bundle identifier provisioned for the device. Run the app and allow camera access.
 
