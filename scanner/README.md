@@ -1,12 +1,14 @@
-# ScanDesigner
+# PawSpace
 
-ScanDesigner records synchronized RGB video, raw LiDAR depth, confidence and camera poses locally on a LiDAR-equipped iPad or iPhone. Open the camera, wait for LiDAR readiness, tap **Record scan**, then **Stop & save**. In the Mac simulator, **Preview scanner** runs the same recording pipeline with explicitly synthetic sensor data.
+PawSpace records synchronized RGB video, raw LiDAR depth, confidence and camera poses locally on a LiDAR-equipped iPad or iPhone. Open the camera, wait for LiDAR readiness, tap **Record scan**, then **Stop & save**. In the Mac simulator, **Preview scanner** runs the same recording pipeline with explicitly synthetic sensor data.
 
-Each finished scan appears in **Scan library** and in **Files → On My iPad (or iPhone) → ScanDesigner**. Existing folders in the app’s Documents directory remain browsable. See the [installation instructions](doc/INSTALL.md).
+Each finished scan appears in **Scan library** and in **Files → On My iPad (or iPhone) → PawSpace** (ScanDesigner on older versions). Existing folders in the app’s Documents directory remain browsable. See the [installation instructions](doc/INSTALL.md).
 
-![ScanDesigner capture studio on iPad](resources/images/capture-studio.jpg)
+![PawSpace capture studio on iPad](resources/images/capture-studio.jpg)
 
 ## Recording format
+
+The original `ScanDesigner.depth` format identifier remains unchanged for backward compatibility.
 
 | File | Contents |
 | --- | --- |
