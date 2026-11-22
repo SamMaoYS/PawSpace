@@ -1,4 +1,4 @@
-# ScanDesigner 本地重建
+# PawSpace 本地重建
 
 在 Mac 上把一次扫描的 `rgb.mp4`、`depth.zip`、`camera.jsonl` 融合成米制、带顶点颜色的三角网格和表面点云。三个文件须来自同一次扫描，放在同一目录，保留原文件名。模型使用采集时的 ARKit 世界坐标，Y 轴朝上。
 
