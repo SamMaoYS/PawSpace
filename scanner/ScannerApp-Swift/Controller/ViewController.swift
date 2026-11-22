@@ -34,7 +34,7 @@ final class ViewController: UIViewController {
             DispatchQueue.main.async { [weak self] in
                 guard let self, self.navigationController?.topViewController === self else { return }
                 guard allowed else {
-                    let alert = UIAlertController(title: "Camera access needed", message: "Allow camera access for ScanDesigner in Settings to capture a scan.", preferredStyle: .alert)
+                    let alert = UIAlertController(title: "Camera access needed", message: "Allow camera access for PawSpace in Settings to capture a scan.", preferredStyle: .alert)
                     alert.addAction(UIAlertAction(title: "Settings", style: .default) { _ in
                         if let url = URL(string: UIApplication.openSettingsURLString) { UIApplication.shared.open(url) }
                     })
@@ -72,7 +72,7 @@ private struct StudioHome: View {
                 VStack(alignment: .leading, spacing: wide ? 28 : 20) {
                     HStack(spacing: 10) {
                         artwork("ScanMark").resizable().accessibilityHidden(true).frame(width: 39, height: 39).clipShape(RoundedRectangle(cornerRadius: 10))
-                        Text("ScanDesigner").font(.title3.weight(.bold))
+                        Text("PawSpace").font(.title3.weight(.bold))
                         Spacer(minLength: 12)
                         artwork("HKUST").resizable().scaledToFit().frame(width: wide ? 182 : 106, height: wide ? 57 : 34)
                             .accessibilityLabel("The Hong Kong University of Science and Technology")
@@ -109,7 +109,7 @@ private struct StudioHome: View {
                         }.padding(20).frame(maxWidth: .infinity, alignment: .leading)
                             .background(.white, in: RoundedRectangle(cornerRadius: 20))
                     }.buttonStyle(.plain)
-                    Label("Files  /  On My \(UIDevice.current.userInterfaceIdiom == .pad ? "iPad" : "iPhone")  /  ScanDesigner",
+                    Label("Files  /  On My \(UIDevice.current.userInterfaceIdiom == .pad ? "iPad" : "iPhone")  /  PawSpace",
                           systemImage: "internaldrive").font(.footnote.monospaced()).foregroundStyle(.secondary)
                 }.frame(maxWidth: 1150).padding(.horizontal, wide ? 48 : 20).padding(.vertical, wide ? 32 : 16)
                     .frame(maxWidth: .infinity)

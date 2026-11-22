@@ -28,7 +28,8 @@ const buttons = new Map();
 const pins = new Map();
 let active = 'overview';
 let views = [];
-let language = 'en';
+const report = Boolean(document.querySelector('#plan'));
+let language = report && document.documentElement.lang !== 'en' ? 'zh' : 'en';
 let failed = false;
 let model = 'scan';
 const modelButtons = document.querySelectorAll('[data-model]');
@@ -107,7 +108,8 @@ for (const button of document.querySelectorAll('[data-lang]')) {
     try { localStorage.setItem('scandesigner.language', language); } catch {}
   });
 }
-try { if (localStorage.getItem('scandesigner.language') === 'zh') language = 'zh'; } catch {}
+try { if (!report && localStorage.getItem('scandesigner.language') === 'zh') language = 'zh'; } catch {}
+if (report) window.addEventListener('paw-language', event => applyLanguage(event.detail));
 applyLanguage(language);
 
 function showError() {
@@ -223,7 +225,8 @@ const stillButton = document.querySelector('#pet-still');
 const petError = document.querySelector('#pet-error');
 
 function showPetView(interactive) {
-  petPhoto.hidden = interactive;
+  (report ? document.querySelector('#plan') : petPhoto).hidden = interactive;
+  if (report) document.querySelector('#plan-mode').textContent = interactive ? '拖动旋转 · 双指或滚轮缩放' : '虚拟副本 · 剖视渲染';
   petRoom.hidden = !interactive;
   rotateButton.hidden = interactive;
   stillButton.hidden = !interactive;
@@ -234,8 +237,8 @@ rotateButton.addEventListener('click', () => {
   petError.hidden = true;
   showPetView(true);
   if (!petRoom.hasAttribute('src')) {
-    petRoom.poster = './assets/showcase/cat-corner.jpg';
-    petRoom.src = './assets/pet-layout.glb';
+    petRoom.poster = report ? './assets/showcase/pet-zones-render.jpg' : './assets/showcase/cat-corner.jpg';
+    petRoom.src = report ? './assets/pet-zones.glb' : './assets/pet-layout.glb';
   }
 });
 stillButton.addEventListener('click', () => showPetView(false));

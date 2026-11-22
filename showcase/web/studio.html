@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#ffffff"><title data-zh="PawSpace · 从房间扫描到宠物布置">PawSpace · Pet-friendly room design</title>
+  <link rel="icon" href="data:,"><link rel="stylesheet" href="./viewer.css"><link rel="stylesheet" href="./project.css">
+  <script type="module" src="./assets/model-viewer.min.js"></script>
+  <script type="module" src="./viewer.js"></script>
+</head>
+<body>
+<header><div class="bar"><span class="brand"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="m3 10 13-7 13 7v13l-13 7-13-7Z M3 10l13 7 13-7 M16 17v13 M9 7l14 7v7"/></svg>PawSpace</span><nav class="site-nav" aria-label="Page navigation" data-zh-aria="页面导航"><a href="#app" data-zh="App 介绍">The app</a><a href="#explore" data-zh="房间漫游">Room tour</a><a href="#replica" data-zh="虚拟副本">Virtual Replica</a><a href="#pet-design" data-zh="宠物布置">Pet layout</a>  <div class="languages" role="group" aria-label="Page language" data-zh-aria="页面语言">
+    <button type="button" lang="zh-CN" data-lang="zh" aria-pressed="false">中文</button>
+    <button type="button" lang="en" data-lang="en" aria-pressed="true">English</button>
+  </div></nav></div></header>
+<main>
+  <section class="intro" id="app" aria-labelledby="app-title">
+    <div class="intro-copy">
+      <h1 id="app-title"><strong data-zh="扫描你的房间">Scan your room</strong><span data-zh="给猫留一个合适的位置">Make room for your cat</span></h1>
+      <p data-zh="每个家的布局都不同。用配备 LiDAR 的 iPhone 或 iPad 绕房间走一圈，PawSpace 会同步记录 RGB 画面和深度。重建出自己的房间后，就能先在里面试摆一个猫窝。">Every home has a different layout. Walk through yours with a LiDAR-equipped iPhone or iPad. PawSpace captures colour (RGB) and depth so you can reconstruct the room and try a cat bed alongside your own furniture.</p>
+      <a class="explore-link" href="#explore"><span data-zh="进入房间漫游">Explore the room</span> <span aria-hidden="true">↓</span></a>
+    </div>
+    <figure class="demo">
+      <div class="tablet">
+        <div class="demo-player">
+        <video controls playsinline muted preload="none" width="1280" height="882"
+          aria-label="Silent PawSpace app demo at four times normal speed" data-zh-aria="PawSpace App 扫描操作演示，四倍速，无声"
+          poster="./assets/showcase/app-cover.png" src="./assets/showcase/app.mp4">
+          <a href="./assets/showcase/app.mp4" data-zh="打开操作视频">Open demo video</a>
+        </video>
+        <button class="demo-cover" type="button" hidden aria-label="Play the app demo" data-zh-aria="播放 App 操作演示">
+          <span class="play-icon" aria-hidden="true">▶</span>
+        </button>
+        </div>
+      </div>
+      <figcaption><span data-zh="App 操作演示">Scanning with the app</span><span data-zh="4 倍速 · 19 秒">4× speed · 19 sec</span></figcaption>
+    </figure>
+  </section>
+  <section id="camera-path" class="camera-path story-section" aria-labelledby="camera-path-title">
+    <div>
+      <h2 class="section-title" id="camera-path-title" data-zh="扫描结果可视化">Scan Results Visualization</h2>
+      <p class="section-intro" data-zh="绿色标记显示扫描时相机的位置和朝向。镜头跟随它穿过重建的房间，可以看到厨房和沙发是怎样被扫进来的。">The green marker shows where the camera was and which way it faced. Follow it through the reconstructed room as the kitchen and sofa come into view.</p>
+    </div>
+    <video controls playsinline preload="none" width="1440" height="900" poster="./assets/showcase/camera-path.jpg" src="./assets/showcase/camera-path.mp4" aria-label="Camera movement through the reconstructed room" data-zh-aria="相机在重建房间中的移动轨迹">
+      <a href="./assets/showcase/camera-path.mp4" data-zh="打开相机轨迹视频">Open the camera path video</a>
+    </video>
+  </section>
+  <section class="explore" id="explore" aria-labelledby="explore-title">
+  <div class="tour-heading">
+    <h2 class="section-title" id="explore-title" data-zh="房间漫游">Room tour</h2>
+    <div class="model-picker" role="group" aria-label="Model version" data-zh-aria="模型版本">
+      <button type="button" data-model="scan" data-zh="扫描模型" aria-pressed="true">Room scan</button>
+      <button type="button" data-model="design" data-zh="虚拟副本" aria-pressed="false">Virtual Replica</button>
+    </div>
+  </div>
+  <p class="section-intro" data-zh="先选一个视角，比如沙发或厨房操作台，再切换模型。从同一角度看，扫描模型保留了现场纹理，虚拟副本让家具的轮廓和间距更容易看清。">Choose a view, such as the sofa or kitchen counter, then switch models. The scan shows the actual surfaces. The Virtual Replica shows the furniture shapes and spacing from the same angle.</p>
+  <div class="workspace">
+    <section class="stage" aria-label="3D room" data-zh-aria="三维房间" data-preset="overview">
+      <model-viewer id="room" alt="3D model of the furnished room and kitchen" data-zh-alt="带家具和厨房的房间模型" src="./assets/room.glb" poster="./assets/overview.jpg" camera-controls touch-action="pan-y" interaction-prompt="none" loading="eager" camera-target=".55m -.23m .63m" camera-orbit="-104deg 54deg 10.2m" field-of-view="37deg" min-camera-orbit="auto 5deg .25m" max-camera-orbit="auto 172deg 18m" min-field-of-view="20deg" max-field-of-view="85deg" interpolation-decay="120" shadow-intensity="0" tone-mapping="neutral">
+      </model-viewer>
+      <div class="tools">
+        <button class="tool" id="markers" data-zh-aria="显示标注" data-zh-title="显示或隐藏标注" aria-label="Show annotations" aria-pressed="true" title="Show or hide annotations"><svg viewBox="0 0 24 24"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg></button>
+        <button class="tool" id="home" data-zh-aria="回到全景" data-zh-title="回到全景" aria-label="Return to overview" title="Return to overview"><svg viewBox="0 0 24 24"><path d="M4 10a8 8 0 1 1 .9 6M4 4v6h6"/></svg></button>
+        <button class="tool" id="expand" aria-label="Fullscreen" title="Fullscreen"><svg viewBox="0 0 24 24"><path d="M4 9V4h5m6 0h5v5m0 6v5h-5m-6 0H4v-5"/></svg></button>
+      </div>
+      <div class="notice" id="notice" role="status">Loading model…</div>
+    </section>
+    <aside aria-labelledby="views-title"><h2 id="views-title" data-zh="预设视角">Camera views</h2><nav id="views" data-zh-aria="选择相机视角" aria-label="Choose a camera view"></nav></aside>
+  </div>
+  <div class="caption"><span><i></i><strong id="current" aria-live="polite">Entire room</strong></span><span data-zh="拖动旋转 · 滚轮或双指缩放">Drag to rotate · Scroll or pinch to zoom</span></div>
+  </section>
+  <section id="replica" class="story-section" aria-labelledby="replica-title">
+    <h2 class="section-title" id="replica-title" data-zh="虚拟副本">Virtual Replica</h2>
+    <p class="section-intro" data-zh="我们按扫描得到的尺寸和布局搭建了这个房间。下面三张 Blender 渲染图从不同角度展示厨房、沙发和门的位置，方便在添置物品前先看看哪里放得下。">The replica follows the dimensions and layout of the scanned room. These Blender views show how the kitchen, sofa and doors fit together before you try a new arrangement.</p>
+    <div class="replica-views">
+      <figure><img loading="lazy" width="1600" height="1100" src="./assets/showcase/replica-overview.jpg" alt="Cutaway view of the room from the entry to the living area" data-zh-alt="剖开外墙后的房间全景，从入户门到起居区"><figcaption data-zh="全屋布局">Room layout</figcaption></figure>
+      <figure><img loading="lazy" width="1100" height="780" src="./assets/showcase/replica-kitchen.jpg" alt="Kitchen sink, washer and peninsula as seen from the living area" data-zh-alt="从起居区看厨房的水槽、洗衣机和半岛操作台"><figcaption data-zh="面向厨房">Facing the kitchen</figcaption></figure>
+      <figure><img loading="lazy" width="1100" height="780" src="./assets/showcase/replica-living.jpg" alt="Sofa, TV and window-side door as seen from the kitchen" data-zh-alt="从厨房旁看向沙发、电视和窗边的门"><figcaption data-zh="面向起居区">Facing the living area</figcaption></figure>
+    </div>
+  </section>
+  <section id="pet-design" class="story-section" aria-labelledby="pet-title">
+    <div class="pet-layout">
+      <div class="pet-summary">
+        <h2 class="section-title" id="pet-title" data-zh="猫窝放在哪里合适？">Where would a cat bed fit?</h2>
+        <p class="section-intro" data-zh="建议在沙发靠窗的扶手前预留一块 50 × 40 厘米的地面。绿色虚线是猫窝的建议占地，旋转模型可以看到它与整间屋子的关系。">Reserve a 50 × 40 cm spot in front of the window-side sofa arm. The dashed outline marks the proposed footprint. Rotate the model to see how the bed fits into the room.</p>
+      </div>
+      <figure class="pet-figure">
+        <div class="pet-stage">
+          <img id="pet-photo" src="./assets/showcase/cat-corner.jpg" width="1200" height="850" loading="lazy" alt="An oval cat bed in front of the window-side sofa arm, with its footprint outlined in green" data-zh-alt="靠窗的沙发扶手前放着一个椭圆猫窝，绿色虚线标出了占地范围">
+          <model-viewer id="pet-room" hidden alt="Interactive Virtual Replica with the proposed cat bed" data-zh-alt="虚拟副本中的猫窝布置，可拖动旋转" camera-target="1.06m -.89m 2.64m" camera-orbit="-125deg 58deg 3.79m" field-of-view="32deg" min-camera-orbit="auto 6deg .35m" max-camera-orbit="auto 170deg 18m" min-field-of-view="18deg" max-field-of-view="85deg" camera-controls touch-action="pan-y" interaction-prompt="none" tone-mapping="neutral" shadow-intensity="0"></model-viewer>
+          <button class="pet-action" id="pet-rotate" type="button" aria-controls="pet-room" data-zh="旋转查看布置">Explore in 3D</button>
+          <button class="pet-action" id="pet-still" hidden type="button" aria-controls="pet-room" data-zh="返回渲染图">Back to render</button>
+        </div>
+        <figcaption><i aria-hidden="true"></i><span data-zh="建议预留范围 · 50 × 40 厘米">Suggested footprint · 50 × 40 cm</span></figcaption>
+        <p hidden id="pet-error" role="status" data-zh="三维视图未能载入，渲染图中可查看同一布置。">The 3D view could not load. The render shows the same placement.</p>
+      </figure>
+    </div>
+    <div class="pet-analysis">
+      <h3 data-zh="AI 布置分析">AI layout analysis</h3>
+      <p class="measure-note" data-zh="图中尺寸取自虚拟副本，量的是绿色预留区外缘到家具或门框外缘的水平距离。">Each line measures the horizontal gap from the edge of the green footprint to a furniture edge or doorjamb in the Virtual Replica.</p>
+      <div class="analysis-grid">
+        <article class="analysis-item">
+          <img width="720" height="480" loading="lazy" src="./assets/showcase/measure-sofa.jpg" alt="Sofa front · about 0.08 m" data-zh-alt="距沙发前沿约 0.08 米">
+          <div>
+            <h4 data-zh="给沙发前方留出起身空间">Keep the bed at the sofa’s end</h4>
+            <p class="measure-value" data-zh="距沙发前沿约 0.08 米">Sofa front · about 0.08 m</p>
+            <p class="measure-reason" data-zh="预留区与沙发底座前沿相隔约 8 厘米。把窝放在靠窗扶手前，坐在沙发上能看到猫，另一侧座位前也留出了落脚和起身的位置。">The footprint stops about 8 cm short of the sofa base. Placing it by the window-side arm keeps the cat in sight from the sofa and leaves the approach to the other seat open.</p>
+          </div>
+        </article>
+        <article class="analysis-item">
+          <img width="720" height="480" loading="lazy" src="./assets/showcase/measure-door.jpg" alt="Nearest doorjamb · about 0.18 m" data-zh-alt="距最近的内门门框约 0.18 米">
+          <div>
+            <h4 data-zh="让出内门开口">Keep the doorway clear</h4>
+            <p class="measure-value" data-zh="距最近的内门门框约 0.18 米">Nearest doorjamb · about 0.18 m</p>
+            <p class="measure-reason" data-zh="预留区最近的一角距窗侧门框约 18 厘米，落在门洞侧面。这个尺寸量到固定门框，实际摆放时还要把门完全打开，确认门扇扫过的范围。">The nearest corner of the footprint sits about 18 cm from the window-side jamb, outside the opening. Try the door through its full swing before settling on the spot.</p>
+          </div>
+        </article>
+        <article class="analysis-item">
+          <img width="720" height="480" loading="lazy" src="./assets/showcase/measure-console.jpg" alt="TV console · about 1.03 m" data-zh-alt="距电视柜约 1.03 米">
+          <div>
+            <h4 data-zh="保留电视柜前的空地">Leave space opposite the TV</h4>
+            <p class="measure-value" data-zh="距电视柜约 1.03 米">TV console · about 1.03 m</p>
+            <p class="measure-reason" data-zh="预留区与电视柜最近的两个角相距约一米。从电视一侧走向沙发时，窝前仍留有空地。如果换大窝，朝电视柜方向增加的深度会缩小这段间距。">About a metre separates the nearest corners of the footprint and the TV console. A person approaching the sofa from the TV side can pass in front of the bed. A larger bed extending toward the TV would narrow that gap.</p>
+          </div>
+        </article>
+        <article class="analysis-item">
+          <img width="720" height="480" loading="lazy" src="./assets/showcase/measure-counter.jpg" alt="Kitchen peninsula · about 1.99 m" data-zh-alt="距厨房半岛操作台约 1.99 米">
+          <div>
+            <h4 data-zh="把休息区放在厨房操作区之外">Separate rest from kitchen activity</h4>
+            <p class="measure-value" data-zh="距厨房半岛操作台约 1.99 米">Kitchen peninsula · about 1.99 m</p>
+            <p class="measure-reason" data-zh="从预留区到半岛台面外缘约两米。窝留在起居区靠窗的一端，台边折叠凳周围的地面仍可供人站立、移凳和使用操作台。">The peninsula edge is about two metres from the footprint. In this position the bed stays at the living-room end, away from the folding stool and the spot where someone stands to use the counter.</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+</main>
+</body>
+</html>
